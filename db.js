@@ -1,14 +1,22 @@
-// Import the PostgreSQL client
+require('dotenv').config();
 const { Pool } = require('pg');
 
-// Create a connection pool
 const pool = new Pool({
-  user: 'postgres',      // Replace with your PostgreSQL username
-  host: 'localhost',
-  database: 'mydb',          // Replace with your database name
-  password: 'Perosky@95', // Replace with your PostgreSQL password
-  port: 5433,                // Default PostgreSQL port
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 });
 
-// Export the pool so it can be used in other files
+// Test connection
+pool.connect()
+  .then(client => {
+    console.log("Connected to PostgreSQL successfully!");
+    client.release();
+  })
+  .catch(err => {
+    console.error("Error connecting to PostgreSQL:", err.message);
+  });
+
 module.exports = pool;
